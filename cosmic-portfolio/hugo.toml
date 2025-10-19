@@ -1,65 +1,63 @@
-# Cosmic CTO Portfolio Configuration
+# Professional Portfolio Configuration
 baseURL = 'https://bgside.github.io/alisaleh-projects/'
 languageCode = 'en-us'
-title = 'Ali Emad SALEH - CTO | Hardware Hacker | Cosmic Explorer'
-theme = 'cosmic-cto'
+title = 'Ali Emad SALEH - IT Infrastructure Specialist'
+theme = 'resume'
 
 # Deployment
 publishDir = "docs"
 enableGitInfo = true
 
-# Markup
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      hardWraps = false
-      unsafe = true
-      xhtml = false
-  [markup.highlight]
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ""
-    lineNos = true
-    lineNumbersInTable = true
-    noClasses = false
-    style = "github"
-    tabWidth = 4
-
-# Site parameters
+# Site parameters for Resume Theme
 [params]
-  name = "Ali Emad SALEH"
-  description = "Technical Support and IT Infrastructure Specialist | Hardware Hacker | Embedded Systems Enthusiast | Cosmic Physics Explorer"
-  author = "Ali Emad SALEH"
+  # Personal Information
+  firstName = "Ali Emad"
+  lastName = "SALEH"
+  address = "Damascus, Syria"
   email = "bgside2368@gmail.com"
+  phone = "+963 986 956 140"
+  profileImage = ""  # Will use a default or placeholder
+  favicon = "/favicon.ico"
+
+  # Display Options
+  showQr = false
+  showContact = true
+  showCertifications = true
+  showSocializations = true
+
+  # Sections to display (in order)
+  sections = ["about", "experience", "projects", "skills", "education", "contact"]
 
   # Social links
-  [[params.social]]
+  [[params.handles]]
     name = "LinkedIn"
-    url = "https://www.linkedin.com/in/hex41414141Syriabgside2368@gmail.com"
-    weight = 1
+    link = "https://www.linkedin.com/in/hex41414141bgside2368@gmail.com"
 
-  # Navigation
-  [[menu.main]]
-    name = "About"
-    url = "#about"
-    weight = 1
+  [[params.handles]]
+    name = "GitHub"
+    link = "https://github.com/bgside"
 
-  [[menu.main]]
-    name = "Experience"
-    url = "#experience"
-    weight = 2
+  [[params.handles]]
+    name = "Email"
+    link = "mailto:bgside2368@gmail.com"
 
-  [[menu.main]]
-    name = "Projects"
-    url = "#projects"
-    weight = 3
+# Menu configuration
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 1
 
-  [[menu.main]]
-    name = "Skills"
-    url = "#skills"
-    weight = 4
+[[menu.main]]
+  name = "Experience"
+  url = "/experience/"
+  weight = 2
 
-  [[menu.main]]
-    name = "Contact"
-    url = "#contact"
-    weight = 5
+[[menu.main]]
+  name = "Projects"
+  url = "/projects/"
+  weight = 3
+
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 4
