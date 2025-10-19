@@ -1,0 +1,364 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<section id="hero" class="hero-section">
+    <div class="hero-content animate-fadeInUp">
+        <h1 class="hero-title">{{ .Site.Params.name }}</h1>
+        <h2 class="hero-subtitle">CTO | Hardware Hacker | Cosmic Explorer</h2>
+        <p class="hero-description">
+            Technical Support and IT Infrastructure Specialist with a passion for embedded systems,
+            cosmic physics, and cutting-edge technology. Experienced in government IT infrastructure,
+            network administration, and hardware hacking.
+        </p>
+        <div class="cta-container">
+            <a href="#contact" class="hire-me-btn">🚀 Launch Collaboration</a>
+            <a href="#projects" class="secondary-btn">🌌 Explore Projects</a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="content-section">
+    <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <p class="section-subtitle">
+            Computer Science student and IT specialist blending technical expertise with cosmic curiosity
+        </p>
+
+        <div class="about-content">
+            <div class="about-text animate-slideInLeft">
+                <p>
+                    I'm <strong>Ali Emad SALEH</strong>, a passionate Computer Science student and IT Infrastructure Specialist
+                    with 3-4 years of hands-on experience in system administration, network management, and web development.
+                </p>
+                <p>
+                    My journey spans from managing hybrid infrastructure for 1,600+ users in government institutions to
+                    exploring the mysteries of quantum physics and embedded systems. I believe that great technology
+                    should inspire wonder and push the boundaries of what's possible.
+                </p>
+                <p>
+                    When I'm not architecting robust IT solutions or diving into hardware projects, you'll find me
+                    contemplating the cosmos, tinkering with embedded systems, or exploring the latest in quantum computing.
+                </p>
+                <p>
+                    <strong>Certifications:</strong> CompTIA Linux+, Microsoft Windows Server Fundamentals, CCNA<br>
+                    <strong>Education:</strong> Computer Science - Al-Ittihad Private University (Fifth-year student)
+                </p>
+            </div>
+            <div class="about-image animate-slideInRight">
+                <div class="cosmic-frame">
+                    <div class="profile-placeholder">
+                        <span class="profile-icon">👨‍💻</span>
+                        <p>Ali Emad SALEH</p>
+                        <small>CTO | Hardware Hacker | Cosmic Explorer</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section id="experience" class="content-section">
+    <div class="container">
+        <h2 class="section-title">Professional Experience</h2>
+        <p class="section-subtitle">
+            Leadership in government IT infrastructure and technical innovation
+        </p>
+
+        <div class="timeline animate-fadeInUp">
+            <!-- IT Infrastructure Lead -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">IT Infrastructure Lead</h3>
+                    <p class="timeline-company">Damascus Governorate (2023-2024)</p>
+                    <p class="timeline-date">January 2023 - November 2024</p>
+                    <div class="timeline-description">
+                        <p><strong>Citizen Service Centers</strong></p>
+                        <ul>
+                            <li>Managed hybrid infrastructure (60 Ubuntu/40 Windows Server) for 1,600+ users</li>
+                            <li>Reduced network downtime 35% via Cisco ISR router optimizations</li>
+                            <li>Built Barzah Service Center IT infrastructure from scratch</li>
+                            <li>Deployed 15 WAPs + 120 network points (Cat6a)</li>
+                            <li>Implemented Zendesk ticketing system (85% resolution SLA)</li>
+                            <li>Trained 20+ technicians in incident management procedures</li>
+                            <li>Automated server provisioning (Ansible) for 15+ research environments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Systems Administrator -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Systems Administrator</h3>
+                    <p class="timeline-company">Scientific Research Authority (2022)</p>
+                    <p class="timeline-date">January 2022 - December 2022</p>
+                    <div class="timeline-description">
+                        <p><strong>Governmental Server Consolidation Initiative</strong></p>
+                        <ul>
+                            <li>Directed infrastructure consolidation for 9 governmental entities</li>
+                            <li>Virtualized 140 physical servers → 100 Proxmox instances (40% footprint reduction)</li>
+                            <li>Optimized 30 server cabinets → 15 high-density racks (50% space savings)</li>
+                            <li>Implemented high-availability architecture with HAProxy load balancing</li>
+                            <li>Automated failover (99.95% uptime SLA)</li>
+                            <li>Security hardening: AES-256 encryption + quarterly penetration tests (60% vulnerability reduction)</li>
+                            <li>Disaster recovery design: Multi-site backups (RPO <15 min)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Infrastructure Specialist -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Network Infrastructure Specialist</h3>
+                    <p class="timeline-company">Damascus Governorate | Local Administration Ministry (2021-2022)</p>
+                    <p class="timeline-date">January 2021 - December 2021</p>
+                    <div class="timeline-description">
+                        <ul>
+                            <li>Engineered 400+ network point deployment across governmental facilities</li>
+                            <li>Managed enterprise network infrastructure with 12+ Cisco Catalyst switches</li>
+                            <li>Implemented VLAN/QoS configurations for optimal performance</li>
+                            <li>Deployed 64 TP-Link Omada access points via SDN controller</li>
+                            <li>Implemented port security for sensitive offices and VIP infrastructure</li>
+                            <li>Reduced network incidents 40% through proactive monitoring (PRTG/Wireshark)</li>
+                            <li>Designed QoS policies improving VoIP call quality by 50%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="content-section">
+    <div class="container">
+        <h2 class="section-title">Projects Cosmos</h2>
+        <p class="section-subtitle">
+            Hardware hacking, embedded systems, and IT infrastructure innovations
+        </p>
+
+        <!-- Empty Projects Section -->
+        <div class="empty-projects animate-fadeInUp">
+            <div class="empty-state">
+                <div class="empty-icon">🚀</div>
+                <h3>Project Launch Pad</h3>
+                <p>This section is ready for your amazing projects! Add your government IT infrastructure projects, embedded systems work, hardware hacking adventures, and cosmic physics explorations.</p>
+
+                <div class="project-categories">
+                    <h4>Ready for your projects in:</h4>
+                    <div class="category-tags">
+                        <span class="category-tag">Government IT Infrastructure</span>
+                        <span class="category-tag">Embedded Systems & Hardware</span>
+                        <span class="category-tag">Network Administration</span>
+                        <span class="category-tag">System Architecture</span>
+                        <span class="category-tag">Research & Development</span>
+                        <span class="category-tag">Citizen Service Centers</span>
+                        <span class="category-tag">Hardware Hacking</span>
+                        <span class="category-tag">IoT Projects</span>
+                    </div>
+                </div>
+
+                <div class="project-preview-cards">
+                    <div class="preview-card">
+                        <div class="preview-image">🔧</div>
+                        <h4>Government Infrastructure</h4>
+                        <p>Large-scale IT systems for public service</p>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-image">⚡</div>
+                        <h4>Hardware Projects</h4>
+                        <p>Embedded systems and circuit design</p>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-image">🌐</div>
+                        <h4>Network Solutions</h4>
+                        <p>Enterprise networking and security</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills" class="content-section">
+    <div class="container">
+        <h2 class="section-title">Technical Skills</h2>
+        <p class="section-subtitle">
+            Expertise across IT infrastructure, development, and hardware systems
+        </p>
+
+        <div class="skills-container">
+            <!-- Networking Skills -->
+            <div class="skill-category animate-slideInLeft">
+                <h3 class="skill-title">🌐 Network Administration</h3>
+                <div class="skill-list">
+                    <div class="skill-item">
+                        <span class="skill-name">Cisco Switching & Routing</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">VLANs, STP, LACP</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">SDN Controllers</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">WPA3-Enterprise Security</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Network Monitoring (PRTG)</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infrastructure Skills -->
+            <div class="skill-category animate-fadeInUp">
+                <h3 class="skill-title">🏗️ Infrastructure Management</h3>
+                <div class="skill-list">
+                    <div class="skill-item">
+                        <span class="skill-name">Server Virtualization</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Linux/Windows Administration</span>
+                        <span class="skill-level">Expert</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">High Availability Systems</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Disaster Recovery</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Cloud Infrastructure</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Development Skills -->
+            <div class="skill-category animate-slideInRight">
+                <h3 class="skill-title">💻 Development</h3>
+                <div class="skill-list">
+                    <div class="skill-item">
+                        <span class="skill-name">PHP (Laravel, CodeIgniter)</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">JavaScript</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">HTML/CSS</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Database Design</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">API Development</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hardware Skills -->
+            <div class="skill-category animate-fadeInUp">
+                <h3 class="skill-title">🔧 Hardware & Embedded Systems</h3>
+                <div class="skill-list">
+                    <div class="skill-item">
+                        <span class="skill-name">Embedded Systems Programming</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">PCB Design</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">IoT Development</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Hardware Hacking</span>
+                        <span class="skill-level">Advanced</span>
+                    </div>
+                    <div class="skill-item">
+                        <span class="skill-name">Microcontroller Programming</span>
+                        <span class="skill-level">Intermediate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="content-section">
+    <div class="container">
+        <h2 class="section-title">CTO's Laboratory</h2>
+        <p class="section-subtitle">
+            Ready to collaborate on innovative IT solutions and cosmic tech adventures
+        </p>
+
+        <div class="contact-content animate-fadeInUp">
+            <p class="contact-description">
+                I'm always interested in discussing innovative IT infrastructure projects,
+                embedded systems opportunities, or exploring the frontiers of technology.
+                Let's connect and see how we can build something amazing together!
+            </p>
+
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="contact-label">📧 Email</div>
+                    <div class="contact-value">
+                        <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-label">📱 Phone</div>
+                    <div class="contact-value">
+                        <a href="tel:+963986956140">+963 986 956 140</a>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-label">💼 LinkedIn</div>
+                    <div class="contact-value">
+                        <a href="{{ .Site.Params.social | first | .url }}" target="_blank" rel="noopener">
+                            Professional Profile
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <div class="contact-label">🌟 GitHub</div>
+                    <div class="contact-value">
+                        <a href="https://github.com/{{ .Site.Params.github }}" target="_blank" rel="noopener">
+                            bgside
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <a href="mailto:{{ .Site.Params.email }}" class="hire-me-btn">🚀 Initiate Contact</a>
+                <a href="#projects" class="secondary-btn">📋 View Project Templates</a>
+            </div>
+        </div>
+    </div>
+</section>
+{{ end }}
