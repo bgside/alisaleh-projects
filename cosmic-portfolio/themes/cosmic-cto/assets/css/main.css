@@ -4,27 +4,31 @@
 
 /* CSS Custom Properties */
 :root {
-  /* Cosmic Colors */
-  --cosmic-dark: #0a0a23;
-  --cosmic-purple: #2d1b69;
-  --quantum-blue: #00b4d8;
-  --circuit-green: #00ff88;
+  /* Enhanced Cosmic Colors */
+  --cosmic-void: #05050f;
+  --black-hole-core: #000000;
+  --event-horizon: #ff64ff;
+  --ergosphere: #6496ff;
+  --accretion-blue: #00b4d8;
+  --accretion-purple: #6b46c1;
+  --quantum-cyan: #06b6d4;
+  --plasma-green: #10b981;
   --star-white: #ffffff;
-  --nebula-pink: #ff006e;
+  --nebula-pink: #ec4899;
 
   /* Light Theme Colors */
-  --light-bg: #f8fafc;
+  --light-bg: #f1f5f9;
   --light-surface: #ffffff;
-  --light-primary: #1e293b;
-  --light-secondary: #64748b;
+  --light-primary: #0f172a;
+  --light-secondary: #475569;
   --light-accent: #3b82f6;
 
   /* Dark Theme Colors */
-  --dark-bg: #0a0a23;
-  --dark-surface: #1e1e3f;
-  --dark-primary: #ffffff;
-  --dark-secondary: #94a3b8;
-  --dark-accent: #00ff88;
+  --dark-bg: #05050f;
+  --dark-surface: #0f0f23;
+  --dark-primary: #f8fafc;
+  --dark-secondary: #cbd5e1;
+  --dark-accent: #10b981;
 
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -37,18 +41,22 @@
   --space-lg: 2rem;
   --space-xl: 3rem;
   --space-2xl: 4rem;
+  --space-3xl: 6rem;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
   /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
 /* ==========================================================================
@@ -69,7 +77,7 @@ body {
   font-family: var(--font-primary);
   line-height: 1.6;
   color: var(--dark-primary);
-  background: var(--dark-bg);
+  background: var(--cosmic-void);
   overflow-x: hidden;
 }
 
