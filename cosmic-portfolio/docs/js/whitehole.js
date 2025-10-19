@@ -1,360 +1,273 @@
 /**
- * White Hole Portfolio - Interactive Background System
- * Opposite of black hole - particles flow outward with bright, expansive effects
+ * Advanced WebGL Black Hole Portfolio Background
+ * Realistic gravitational lensing with WebGL shaders
  */
 
-// ==========================================================================
-// White Hole Background System
-// ==========================================================================
-
-class WhiteHoleBackground {
+// WebGL Black Hole Background System
+class WebGLBlackHoleBackground {
     constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        this.centerX = 0;
-        this.centerY = 0;
-        this.whiteHoleRadius = 80;
-        this.expansionRings = [];
-        this.particles = [];
-        this.stars = [];
-        this.animationId = null;
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.reactive = true;
+        this.canvas = document.getElementById('glscreen');
+        this.gl = null;
+        this.program = null;
+        this.buffer = null;
+        this.texture = null;
+        this.startTime = new Date().getTime();
+        this.currentTime = 0;
+        this.mouse = { x: 0, y: 0 };
+        this.blackholeMass = 1500;
+        this.curblackholeMass = 0;
+        this.clicked = false;
+        this.clickedTime = 0;
 
         this.init();
     }
 
     init() {
+        // Initialize WebGL
+        this.gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
+        if (!this.gl) {
+            console.error('WebGL not supported');
+            return;
+        }
+
         this.resizeCanvas();
-        this.createWhiteHole();
-        this.createExpansionRings();
-        this.createParticles();
-        this.createStars();
-        this.animate();
+        this.createShaders();
+        this.createBuffers();
+        this.createTexture();
+        this.render();
 
         // Event listeners
-        window.addEventListener('resize', () => {
-            this.resizeCanvas();
-            this.createWhiteHole();
-            this.createExpansionRings();
-            this.createParticles();
-            this.createStars();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        });
-
-        // Disable reactivity for reduced motion preference
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            this.reactive = false;
-        }
+        window.addEventListener('resize', () => this.resizeCanvas());
+        document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        document.addEventListener('mousedown', () => this.clicked = true);
+        document.addEventListener('mouseup', () => this.clicked = false);
     }
 
     resizeCanvas() {
         const rect = this.canvas.getBoundingClientRect();
         this.canvas.width = rect.width * window.devicePixelRatio;
         this.canvas.height = rect.height * window.devicePixelRatio;
-        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-        this.canvas.style.width = rect.width + 'px';
-        this.canvas.style.height = rect.height + 'px';
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        // Position white hole (dynamic position if reactive)
-        if (this.reactive) {
-            this.centerX = rect.width * 0.4 + (Math.random() - 0.5) * rect.width * 0.3;
-            this.centerY = rect.height * 0.4 + (Math.random() - 0.5) * rect.height * 0.3;
-        } else {
-            this.centerX = rect.width / 2;
-            this.centerY = rect.height / 2;
+        // Update resolution uniform
+        if (this.program) {
+            const locationOfResolution = this.gl.getUniformLocation(this.program, "u_resolution");
+            this.gl.uniform2f(locationOfResolution, this.canvas.width, this.canvas.height);
         }
     }
 
-    createWhiteHole() {
-        // White hole core - bright center
-        this.whiteHoleRadius = Math.min(this.canvas.width, this.canvas.height) / 15;
-    }
-
-    createExpansionRings() {
-        this.expansionRings = [];
-        const numRings = 40;
-
-        for (let i = 0; i < numRings; i++) {
-            const radius = this.whiteHoleRadius + (i * 8);
-            const particles = Math.floor((2 * Math.PI * radius) / 12);
-
-            for (let j = 0; j < particles; j++) {
-                const angle = (j / particles) * Math.PI * 2;
-                this.expansionRings.push({
-                    x: this.centerX + Math.cos(angle) * radius,
-                    y: this.centerY + Math.sin(angle) * radius,
-                    angle: angle,
-                    radius: radius,
-                    expansionSpeed: 0.03 / (radius * 0.005 + 1),
-                    opacity: Math.max(0.2, 1 - (radius - this.whiteHoleRadius) / 200),
-                    hue: (i / numRings) * 120 + 180, // Cyan to green range
-                    size: Math.max(2, 6 - (radius - this.whiteHoleRadius) / 40),
-                    pulsePhase: Math.random() * Math.PI * 2
-                });
+    createShaders() {
+        // Vertex shader
+        const vertexShaderSource = `
+            attribute vec2 a_position;
+            attribute vec2 a_texCoord;
+            varying vec2 v_texCoord;
+            void main() {
+                gl_Position = vec4(a_position, 0, 1);
+                v_texCoord = a_texCoord;
             }
-        }
-    }
+        `;
 
-    createParticles() {
-        this.particles = [];
-        const numParticles = this.reactive ? 100 : 70;
+        // Fragment shader (from user's code)
+        const fragmentShaderSource = `
+            #ifdef GL_ES
+            precision mediump float;
+            #endif
 
-        for (let i = 0; i < numParticles; i++) {
-            // Start particles from white hole center
-            const startAngle = Math.random() * Math.PI * 2;
-            const startDistance = this.whiteHoleRadius + Math.random() * 50;
+            #define PI 3.14159265359
 
-            this.particles.push({
-                x: this.centerX + Math.cos(startAngle) * startDistance,
-                y: this.centerY + Math.sin(startAngle) * startDistance,
-                vx: Math.cos(startAngle) * (2 + Math.random() * 3),
-                vy: Math.sin(startAngle) * (2 + Math.random() * 3),
-                size: Math.random() * 4 + 2,
-                opacity: Math.random() * 0.9 + 0.1,
-                hue: Math.random() * 120 + 160, // Cyan to green
-                expanded: false,
-                creationTime: Date.now(),
-                lifeSpan: 3000 + Math.random() * 4000
-            });
-        }
-    }
+            uniform sampler2D u_image;
+            varying vec2 v_texCoord;
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+            uniform float u_mass;
+            uniform float u_time;
+            uniform float u_clickedTime;
 
-    createStars() {
-        this.stars = [];
-        const numStars = Math.floor((this.canvas.width * this.canvas.height) / 4000);
+            vec2 rotate(vec2 mt, vec2 st, float angle){
+                float cos = cos((angle + u_clickedTime) * PI);
+                float sin = sin(angle * 0.0);
 
-        for (let i = 0; i < numStars; i++) {
-            this.stars.push({
-                x: Math.random() * this.canvas.width / window.devicePixelRatio,
-                y: Math.random() * this.canvas.height / window.devicePixelRatio,
-                size: Math.random() * 3 + 1,
-                opacity: Math.random() * 1 + 0.5,
-                twinkleSpeed: Math.random() * 0.02 + 0.01,
-                hue: Math.random() * 60 + 180, // Bright cyan to blue
-                brightness: 0.8 + Math.random() * 0.4
-            });
-        }
-    }
-
-    animate() {
-        this.animationId = requestAnimationFrame(() => this.animate());
-
-        // Clear with fade effect for trails
-        this.ctx.fillStyle = 'rgba(248, 250, 252, 0.1)';
-        this.ctx.fillRect(0, 0, this.canvas.width / window.devicePixelRatio, this.canvas.height / window.devicePixelRatio);
-
-        // Update and draw expansion rings
-        this.updateExpansionRings();
-
-        // Update and draw particles
-        this.updateParticles();
-
-        // Draw stars
-        this.drawStars();
-
-        // Draw white hole
-        this.drawWhiteHole();
-
-        // Draw expansion field effect
-        this.drawExpansionField();
-    }
-
-    updateExpansionRings() {
-        this.expansionRings.forEach(ring => {
-            // Expand outward from white hole
-            ring.radius += ring.expansionSpeed * 20;
-
-            // Update angle for rotation
-            ring.angle += ring.expansionSpeed * 2;
-
-            // Calculate new position
-            ring.x = this.centerX + Math.cos(ring.angle) * ring.radius;
-            ring.y = this.centerY + Math.sin(ring.angle) * ring.radius;
-
-            // Pulsing effect
-            const pulse = Math.sin(Date.now() * 0.003 + ring.pulsePhase) * 0.3 + 0.7;
-            ring.opacity = Math.max(0.1, (1 - (ring.radius - this.whiteHoleRadius) / 300) * pulse);
-
-            // Draw expansion ring particle
-            this.ctx.beginPath();
-            this.ctx.arc(ring.x, ring.y, ring.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${ring.hue}, 85%, 65%, ${ring.opacity})`;
-            this.ctx.fill();
-
-            // Outer glow effect
-            this.ctx.beginPath();
-            this.ctx.arc(ring.x, ring.y, ring.size * 4, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${ring.hue}, 85%, 65%, ${ring.opacity * 0.2})`;
-            this.ctx.fill();
-
-            // Remove particles that are too far
-            if (ring.radius > Math.max(this.canvas.width, this.canvas.height) / window.devicePixelRatio) {
-                ring.radius = this.whiteHoleRadius;
-            }
-        });
-    }
-
-    updateParticles() {
-        const currentTime = Date.now();
-
-        this.particles.forEach((particle, index) => {
-            if (particle.expanded) return;
-
-            // Update position (moving outward)
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-
-            // Check if particle is too far from white hole
-            const dx = particle.x - this.centerX;
-            const dy = particle.y - this.centerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance > Math.max(this.canvas.width, this.canvas.height) / window.devicePixelRatio) {
-                particle.expanded = true;
-                return;
+                float nx = (cos * (st.x - mt.x)) + (sin * (st.y - mt.y)) + mt.x;
+                float ny = (cos * (st.y - mt.y)) - (sin * (st.x - mt.x)) + mt.y;
+                return vec2(nx, ny);
             }
 
-            // Mouse interaction (if reactive)
-            if (this.reactive) {
-                const mouseDx = this.mouseX - particle.x;
-                const mouseDy = this.mouseY - particle.y;
-                const mouseDistance = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
+            void main() {
+                vec2 st = vec2(gl_FragCoord.x, u_resolution.y - gl_FragCoord.y)/u_resolution;
+                vec2 mt = vec2(u_mouse.x, u_resolution.y - u_mouse.y)/u_resolution;
 
-                if (mouseDistance < 200) {
-                    const repulsion = (200 - mouseDistance) / 200;
-                    particle.vx += (mouseDx / mouseDistance) * repulsion * 0.02;
-                    particle.vy += (mouseDy / mouseDistance) * repulsion * 0.02;
-                }
+                float dx = st.x - mt.x;
+                float dy = st.y - mt.y;
+                float dist = sqrt(dx * dx + dy * dy);
+                float pull = u_mass / (dist * dist);
+
+                vec3 color = vec3(0.0);
+
+                vec2 r = rotate(mt, st, pull);
+                vec4 imgcolor = texture2D(u_image, r);
+                color = vec3(
+                    (imgcolor.x - (pull * 0.25)),
+                    (imgcolor.y - (pull * 0.25)),
+                    (imgcolor.z - (pull * 0.25))
+                );
+
+                gl_FragColor = vec4(color, 1.0);
             }
+        `;
 
-            // Draw particle with trail
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${particle.hue}, 95%, 70%, ${particle.opacity})`;
-            this.ctx.fill();
+        // Create and compile shaders
+        const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
+        const fragmentShader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
 
-            // Bright trail effect
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x - particle.vx * 3, particle.y - particle.vy * 3, particle.size * 0.7, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${particle.hue}, 95%, 70%, ${particle.opacity * 0.6})`;
-            this.ctx.fill();
+        this.gl.shaderSource(vertexShader, vertexShaderSource);
+        this.gl.shaderSource(fragmentShader, fragmentShaderSource);
 
-            // Outer glow
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size * 6, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${particle.hue}, 95%, 70%, ${particle.opacity * 0.15})`;
-            this.ctx.fill();
-        });
+        this.gl.compileShader(vertexShader);
+        this.gl.compileShader(fragmentShader);
 
-        // Remove expanded particles
-        this.particles = this.particles.filter(p => !p.expanded);
+        // Create program
+        this.program = this.gl.createProgram();
+        this.gl.attachShader(this.program, vertexShader);
+        this.gl.attachShader(this.program, fragmentShader);
+        this.gl.linkProgram(this.program);
+        this.gl.useProgram(this.program);
+
+        // Get uniform locations
+        this.locationOfTime = this.gl.getUniformLocation(this.program, "u_time");
+        this.locationOfResolution = this.gl.getUniformLocation(this.program, "u_resolution");
+        this.locationOfMouse = this.gl.getUniformLocation(this.program, "u_mouse");
+        this.locationOfMass = this.gl.getUniformLocation(this.program, "u_mass");
+        this.locationOfclickedTime = this.gl.getUniformLocation(this.program, "u_clickedTime");
     }
 
-    drawStars() {
-        const time = Date.now() * 0.001;
-
-        this.stars.forEach(star => {
-            // Update opacity for twinkling with brightness variation
-            const twinkle = Math.sin(time * star.twinkleSpeed) * 0.3 + 0.7;
-            star.opacity = (Math.random() * 0.3 + 0.7) * star.brightness * twinkle;
-
-            // Draw star
-            this.ctx.beginPath();
-            this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = `hsla(${star.hue}, 80%, 90%, ${Math.max(0.2, Math.min(1, star.opacity))})`;
-            this.ctx.fill();
-
-            // Star corona effect
-            if (star.size > 1.5) {
-                this.ctx.beginPath();
-                this.ctx.arc(star.x, star.y, star.size * 3, 0, Math.PI * 2);
-                this.ctx.fillStyle = `hsla(${star.hue}, 80%, 90%, ${Math.max(0, Math.min(0.3, star.opacity * 0.3))})`;
-                this.ctx.fill();
-            }
-        });
-    }
-
-    drawWhiteHole() {
-        // White hole core - bright center
-        const gradient = this.ctx.createRadialGradient(
-            this.centerX, this.centerY, 0,
-            this.centerX, this.centerY, this.whiteHoleRadius * 3
+    createBuffers() {
+        // Create buffer for rectangle
+        this.buffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+        this.gl.bufferData(
+            this.gl.ARRAY_BUFFER,
+            new Float32Array([
+                -1.0, -1.0,
+                1.0, -1.0,
+                -1.0, 1.0,
+                -1.0, 1.0,
+                1.0, -1.0,
+                1.0, 1.0
+            ]),
+            this.gl.STATIC_DRAW
         );
 
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.3, 'rgba(240, 253, 255, 0.9)');
-        gradient.addColorStop(0.6, 'rgba(186, 230, 253, 0.6)');
-        gradient.addColorStop(0.8, 'rgba(125, 211, 252, 0.3)');
-        gradient.addColorStop(1, 'rgba(125, 211, 252, 0)');
+        // Set up attributes
+        const positionLocation = this.gl.getAttribLocation(this.program, "a_position");
+        this.gl.enableVertexAttribArray(positionLocation);
+        this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
 
-        this.ctx.fillStyle = gradient;
-        this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, this.whiteHoleRadius * 3, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        // Inner bright core
-        this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, this.whiteHoleRadius * 0.6, 0, Math.PI * 2);
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-        this.ctx.fill();
-
-        // Event horizon ring (opposite of black hole - bright instead of dark)
-        this.ctx.strokeStyle = 'rgba(6, 182, 212, 0.9)';
-        this.ctx.lineWidth = 3;
-        this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, this.whiteHoleRadius, 0, Math.PI * 2);
-        this.ctx.stroke();
-
-        // Ergosphere (expansion zone)
-        this.ctx.strokeStyle = 'rgba(16, 185, 129, 0.6)';
-        this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, this.whiteHoleRadius * 1.8, 0, Math.PI * 2);
-        this.ctx.stroke();
-
-        // Outer energy field
-        this.ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
-        this.ctx.lineWidth = 1;
-        this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, this.whiteHoleRadius * 2.5, 0, Math.PI * 2);
-        this.ctx.stroke();
+        // Texture coordinates
+        const texCoordLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
+        const texCoordBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, texCoordBuffer);
+        this.gl.bufferData(
+            this.gl.ARRAY_BUFFER,
+            new Float32Array([
+                0.0, 1.0,
+                1.0, 1.0,
+                0.0, 0.0,
+                0.0, 0.0,
+                1.0, 1.0,
+                1.0, 0.0
+            ]),
+            this.gl.STATIC_DRAW
+        );
+        this.gl.enableVertexAttribArray(texCoordLocation);
+        this.gl.vertexAttribPointer(texCoordLocation, 2, this.gl.FLOAT, false, 0, 0);
     }
 
-    drawExpansionField() {
-        // Create expansion field visualization
-        const time = Date.now() * 0.002;
+    createTexture() {
+        this.texture = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
 
-        // Multiple expansion waves
-        for (let wave = 0; wave < 3; wave++) {
-            const waveRadius = this.whiteHoleRadius * 2 + (wave * 100) + Math.sin(time + wave) * 30;
-            const waveOpacity = Math.max(0, 0.3 - (wave * 0.08));
+        // Set texture parameters
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
 
-            const waveGradient = this.ctx.createRadialGradient(
-                this.centerX, this.centerY, waveRadius - 20,
-                this.centerX, this.centerY, waveRadius + 20
-            );
+        // Create a simple cosmic background pattern
+        const width = 512;
+        const height = 512;
+        const imageData = new Uint8Array(width * height * 4);
 
-            waveGradient.addColorStop(0, `rgba(6, 182, 212, ${waveOpacity})`);
-            waveGradient.addColorStop(0.5, `rgba(16, 185, 129, ${waveOpacity * 0.5})`);
-            waveGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+        for (let i = 0; i < width * height; i++) {
+            const x = (i % width) / width;
+            const y = Math.floor(i / width) / height;
 
-            this.ctx.strokeStyle = waveGradient;
-            this.ctx.lineWidth = 8;
-            this.ctx.beginPath();
-            this.ctx.arc(this.centerX, this.centerY, waveRadius, 0, Math.PI * 2);
-            this.ctx.stroke();
+            // Create a cosmic-looking background
+            const dx = x - 0.5;
+            const dy = y - 0.5;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Stars and nebula effect
+            const starField = Math.sin(x * 100) * Math.cos(y * 100) * 0.5 + 0.5;
+            const nebula = Math.sin(x * 10) * Math.cos(y * 8) * 0.3 + 0.7;
+
+            imageData[i * 4] = Math.floor(starField * nebula * 100 + 50);     // R
+            imageData[i * 4 + 1] = Math.floor(starField * nebula * 150 + 100); // G
+            imageData[i * 4 + 2] = Math.floor(starField * nebula * 200 + 150); // B
+            imageData[i * 4 + 3] = 255; // A
         }
+
+        this.gl.texImage2D(
+            this.gl.TEXTURE_2D,
+            0,
+            this.gl.RGBA,
+            width,
+            height,
+            0,
+            this.gl.RGBA,
+            this.gl.UNSIGNED_BYTE,
+            imageData
+        );
+    }
+
+    handleMouseMove(e) {
+        this.mouse.x = e.clientX;
+        this.mouse.y = this.canvas.height - e.clientY; // Flip Y coordinate
+    }
+
+    render() {
+        const now = new Date().getTime();
+        this.currentTime = (now - this.startTime) / 1000;
+
+        // Update black hole mass
+        if (this.curblackholeMass < this.blackholeMass - 50) {
+            this.curblackholeMass += (this.blackholeMass - this.curblackholeMass) * 0.03;
+        }
+
+        // Update click effect
+        if (this.clicked) {
+            this.clickedTime += 0.03;
+        } else if (this.clickedTime > 0) {
+            this.clickedTime += -(this.clickedTime * 0.015);
+        }
+
+        // Update uniforms
+        this.gl.uniform1f(this.locationOfMass, this.curblackholeMass * 0.00001);
+        this.gl.uniform2f(this.locationOfMouse, this.mouse.x, this.mouse.y);
+        this.gl.uniform1f(this.locationOfTime, this.currentTime);
+        this.gl.uniform1f(this.locationOfclickedTime, this.clickedTime);
+
+        // Draw
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+
+        requestAnimationFrame(() => this.render());
     }
 
     destroy() {
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
+        if (this.gl) {
+            this.gl.deleteProgram(this.program);
+            this.gl.deleteBuffer(this.buffer);
+            this.gl.deleteTexture(this.texture);
         }
     }
 }
