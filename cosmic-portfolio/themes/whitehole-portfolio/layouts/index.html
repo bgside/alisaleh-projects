@@ -1,61 +1,8 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-	<meta name="generator" content="Hugo 0.151.2">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ali Emad SALEH - IT Infrastructure Specialist</title>
-
-    
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="keywords" content="IT Infrastructure, Hardware Hacker, Embedded Systems, Technical Portfolio, Ali Saleh">
-
-    
-    <meta property="og:title" content="Ali Emad SALEH - IT Infrastructure Specialist">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bgside.github.io/alisaleh-projects/">
-
-    
-    <link rel="icon" type="image/x-icon" href="/alisaleh-projects/favicon.ico">
-
-    
-    <link rel="stylesheet" href="/alisaleh-projects/css/main.css">
-
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
-</head>
-<body class="whitehole-bg">
-    
-    <nav class="whitehole-nav">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <span class="brand-text">Ali Emad SALEH</span>
-            </div>
-            <div class="nav-menu">
-                
-                <a href="/alisaleh-projects/" class="nav-link">Home</a>
-                
-                <a href="/alisaleh-projects/experience/" class="nav-link">Experience</a>
-                
-                <a href="/alisaleh-projects/projects/" class="nav-link">Projects</a>
-                
-                <a href="/alisaleh-projects/contact/" class="nav-link">Contact</a>
-                
-            </div>
-        </div>
-    </nav>
-
-    
-    <main class="whitehole-main">
-        
-
+{{ define "main" }}
+<!-- Hero Section -->
 <section class="hero-section">
     <div class="hero-content animate-fadeInUp">
-        <h1 class="hero-title">Ali Emad SALEH</h1>
+        <h1 class="hero-title">{{ .Site.Params.firstName }} {{ .Site.Params.lastName }}</h1>
         <h2 class="hero-subtitle">IT Infrastructure Specialist | Hardware Hacker | Cosmic Explorer</h2>
         <p class="hero-description">
             Technical Support and IT Infrastructure Specialist with 3-4 years of hands-on experience in system administration,
@@ -64,65 +11,45 @@
     </div>
 </section>
 
-
+<!-- About Section -->
 <section class="content-section">
     <h2 class="section-title">About Me</h2>
     <div class="about-content">
         <div class="about-text animate-slideInLeft">
-            
-                
-            
-                
-            
-                
-            
-                
-            
-                
-            
-                
-            
+            {{ range .Site.Pages }}
+                {{ if eq .Type "index" }}
+                    {{ .Content }}
+                {{ end }}
+            {{ end }}
         </div>
     </div>
 </section>
 
-
+<!-- Experience Section -->
 <section class="content-section">
     <h2 class="section-title">Professional Experience</h2>
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
+    {{ range .Site.Pages }}
+        {{ if eq .Type "experience" }}
+            <div class="timeline animate-fadeInUp">
+                {{ .Content }}
+            </div>
+        {{ end }}
+    {{ end }}
 </section>
 
-
+<!-- Projects Section -->
 <section class="content-section">
     <h2 class="section-title">Projects</h2>
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
+    {{ range .Site.Pages }}
+        {{ if eq .Type "projects" }}
+            <div class="projects-content">
+                {{ .Content }}
+            </div>
+        {{ end }}
+    {{ end }}
 </section>
 
-
+<!-- Skills Section -->
 <section class="content-section">
     <h2 class="section-title">Technical Skills</h2>
     <div class="skills-container">
@@ -208,73 +135,45 @@
     </div>
 </section>
 
-
+<!-- Contact Section -->
 <section class="content-section">
     <h2 class="section-title">Contact</h2>
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
+    {{ range .Site.Pages }}
+        {{ if eq .Type "contact" }}
+            <div class="contact-content animate-fadeInUp">
+                {{ .Content }}
+            </div>
+        {{ end }}
+    {{ end }}
 
     <div class="contact-info">
         <div class="contact-grid">
             <div class="contact-item">
                 <strong>Email:</strong>
-                <a href="mailto:bgside2368@gmail.com">bgside2368@gmail.com</a>
+                <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
             </div>
             <div class="contact-item">
                 <strong>Phone:</strong>
-                <a href="tel:&#43;963%20986%20956%20140">&#43;963 986 956 140</a>
+                <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a>
             </div>
             <div class="contact-item">
                 <strong>Location:</strong>
-                Damascus, Syria
+                {{ .Site.Params.address }}
             </div>
         </div>
 
-        
+        {{ if .Site.Params.handles }}
         <div class="social-links">
             <h3>Connect With Me</h3>
             <div class="social-grid">
-                
-                <a href="https://www.linkedin.com/in/hex41414141bgside2368@gmail.com" class="social-link" target="_blank" rel="noopener">
-                    LinkedIn
+                {{ range .Site.Params.handles }}
+                <a href="{{ .link }}" class="social-link" target="_blank" rel="noopener">
+                    {{ .name }}
                 </a>
-                
-                <a href="https://github.com/bgside" class="social-link" target="_blank" rel="noopener">
-                    GitHub
-                </a>
-                
-                <a href="mailto:bgside2368@gmail.com" class="social-link" target="_blank" rel="noopener">
-                    Email
-                </a>
-                
+                {{ end }}
             </div>
         </div>
-        
+        {{ end }}
     </div>
 </section>
-
-    </main>
-
-    
-    <div class="whitehole-bg-canvas">
-        <canvas id="whiteholeCanvas"></canvas>
-    </div>
-
-    
-    <div id="particles" class="particles"></div>
-
-    
-    <script src="/alisaleh-projects/js/whitehole.js"></script>
-</body>
-</html>
+{{ end }}

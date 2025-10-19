@@ -1,8 +1,8 @@
-# Professional Portfolio Configuration
+# Blowfish Portfolio Configuration
 baseURL = 'https://bgside.github.io/alisaleh-projects/'
 languageCode = 'en-us'
 title = 'Ali Emad SALEH - IT Infrastructure Specialist'
-theme = 'resume'
+theme = 'whitehole-portfolio'
 
 # Deployment
 publishDir = "docs"
